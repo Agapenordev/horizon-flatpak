@@ -1,0 +1,46 @@
+app-id: dev.playhorizon.Horizon
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+sdk: org.freedesktop.Sdk
+command: horizon-launcher
+
+finish-args:
+  - --share=network
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --socket=pulseaudio
+  - --device=dri
+  - --filesystem=~/.minecraft:ro
+
+modules:
+  - name: horizon-launcher
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 horizon-launcher /app/bin/horizon-launcher
+      - install -Dm644 dev.playhorizon.Horizon.desktop /app/share/applications/dev.playhorizon.Horizon.desktop
+      - install -Dm644 dev.playhorizon.Horizon.metainfo.xml /app/share/metainfo/dev.playhorizon.Horizon.metainfo.xml
+      - install -Dm644 horizon.png /app/share/icons/hicolor/256x256/apps/dev.playhorizon.Horizon.png
+      - install -Dm644 LICENSE.upstream /app/share/licenses/horizon/LICENSE
+      - install -Dm644 THIRD_PARTY_NOTICES.md /app/share/licenses/horizon/THIRD_PARTY_NOTICES.md
+    sources:
+      - type: archive
+        url: https://github.com/horizon-rust/horizon/releases/download/launcher%400.2.41/horizon-launcher-linux-x86_64.tar.gz
+        sha256: 7533b577090c41c2e9961eaeb16c3af7ead3bf044e58976057e9a1d8cb48aa4f
+        strip-components: 0
+        only-arches: [x86_64]
+      - type: file
+        path: dev.playhorizon.Horizon.desktop
+      - type: file
+        path: dev.playhorizon.Horizon.metainfo.xml
+      - type: file
+        url: https://raw.githubusercontent.com/horizon-rust/horizon/v0.2.97/packaging/icons/hicolor/256x256/apps/horizon.png
+        sha256: a7621db90a417d8e3dc3ebae1e5bcfaa142fb0c1f09e1f646a8baef4eca06777
+        dest-filename: horizon.png
+      - type: file
+        url: https://raw.githubusercontent.com/horizon-rust/horizon/v0.2.97/LICENSE
+        sha256: b4b374ae9d0f2d8f7be35c6783e41327431da3b5662605da9ba31493630621df
+        dest-filename: LICENSE.upstream
+      - type: file
+        url: https://raw.githubusercontent.com/horizon-rust/horizon/v0.2.97/THIRD_PARTY_NOTICES.md
+        sha256: 3339f6f0b51e916d685fcdf26f7a878545e03c2b9cb045f0649f5be1eea753fc
