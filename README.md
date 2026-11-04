@@ -65,7 +65,17 @@ Create a single-file bundle:
 flatpak build-bundle repo horizon-launcher.flatpak dev.playhorizon.Horizon
 ```
 
-To update the package, replace the launcher URL and SHA-256 checksum in `dev.playhorizon.Horizon.yml`, then add the corresponding release to `dev.playhorizon.Horizon.metainfo.xml`.
+To update the package manually, replace the launcher URL and SHA-256 checksum in `dev.playhorizon.Horizon.yml`, then add the corresponding release to `dev.playhorizon.Horizon.metainfo.xml`.
+
+## Automatic releases
+
+A [GitHub Actions workflow](.github/workflows/update-launcher.yml) checks for a new upstream launcher every six hours. When one is available, it verifies and pins the new archive, builds the Flatpak, commits the manifest changes, and publishes a GitHub release. The workflow can also be started manually from the repository's Actions page.
+
+GitHub cannot update applications on users' computers. To install the newest published bundle over an existing installation, run:
+
+```bash
+flatpak install --user --or-update https://github.com/Agapenordev/horizon-flatpak/releases/latest/download/horizon-launcher.flatpak
+```
 
 ## Uninstall
 

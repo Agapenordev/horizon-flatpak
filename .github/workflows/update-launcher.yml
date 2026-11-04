@@ -1,0 +1,62 @@
+name: Update Horizon launcher
+
+on:
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: horizon-launcher-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out packaging
+        uses: actions/checkout@v4
+
+      - name: Check for an upstream launcher release
+        id: update
+        run: python3 tools/update_manifest.py
+
+      - name: Install Flatpak build tools
+        if: steps.update.outputs.changed == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes flatpak flatpak-builder
+          flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak install --user --noninteractive flathub org.freedesktop.Platform//25.08 org.freedesktop.Sdk//25.08
+
+      - name: Build the Flatpak bundle
+        if: steps.update.outputs.changed == 'true'
+        run: |
+          flatpak-builder --force-clean --user --repo=repo builddir dev.playhorizon.Horizon.yml
+          flatpak build-bundle --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo repo horizon-launcher.flatpak dev.playhorizon.Horizon
+          sha256sum horizon-launcher.flatpak > horizon-launcher.flatpak.sha256
+
+      - name: Commit the packaging update
+        if: steps.update.outputs.changed == 'true'
+        env:
+          VERSION: ${{ steps.update.outputs.version }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dev.playhorizon.Horizon.yml dev.playhorizon.Horizon.metainfo.xml
+          git commit -m "Update Horizon launcher to ${VERSION}"
+          git push
+
+      - name: Publish the Flatpak release
+        if: steps.update.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.update.outputs.version }}
+          TAG: flatpak-${{ steps.update.outputs.version }}
+        run: |
+          gh release create "${TAG}" horizon-launcher.flatpak horizon-launcher.flatpak.sha256 \
+            --title "Horizon launcher ${VERSION} Flatpak" \
+            --notes "Unofficial Flatpak bundle for Horizon launcher ${VERSION} (Linux x86-64). See the README for installation, permissions, and security limitations."
