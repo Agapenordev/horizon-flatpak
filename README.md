@@ -10,7 +10,7 @@ The package supports **Linux x86-64** and uses the Freedesktop 25.08 runtime.
 
 ```bash
 flatpak install --user flathub org.freedesktop.Platform//25.08
-flatpak install --user https://github.com/Agapenordev/horizon-flatpak/releases/latest/download/horizon-launcher.flatpak
+flatpak install --user https://agapenordev.github.io/horizon-flatpak/dev.playhorizon.Horizon.flatpakref
 ```
 
 Start Horizon from your application menu or run:
@@ -67,14 +67,21 @@ flatpak build-bundle repo horizon-launcher.flatpak dev.playhorizon.Horizon
 
 To update the package manually, replace the launcher URL and SHA-256 checksum in `dev.playhorizon.Horizon.yml`, then add the corresponding release to `dev.playhorizon.Horizon.metainfo.xml`.
 
-## Automatic releases
+## Automatic releases and updates
 
-A [GitHub Actions workflow](.github/workflows/update-launcher.yml) checks for a new upstream launcher every six hours. When one is available, it verifies and pins the new archive, builds the Flatpak, commits the manifest changes, and publishes a GitHub release. The workflow can also be started manually from the repository's Actions page.
+A [GitHub Actions workflow](.github/workflows/update-launcher.yml) checks for a new upstream launcher every six hours. When one is available, it verifies and pins the new archive, builds the Flatpak, commits the manifest changes, and publishes a GitHub release. A [second workflow](.github/workflows/publish-repository.yml) publishes the corresponding Flatpak repository to GitHub Pages. Both workflows can also be started manually from the repository's Actions page.
 
-GitHub cannot update applications on users' computers. To install the newest published bundle over an existing installation, run:
+After installing through the `.flatpakref`, update Horizon with:
 
 ```bash
-flatpak install --user --or-update https://github.com/Agapenordev/horizon-flatpak/releases/latest/download/horizon-launcher.flatpak
+flatpak update --user dev.playhorizon.Horizon
+```
+
+To switch an existing standalone-bundle installation to repository updates, uninstall and reinstall it through the `.flatpakref`. This preserves Horizon's application data; do not add `--delete-data`:
+
+```bash
+flatpak uninstall --user dev.playhorizon.Horizon
+flatpak install --user https://agapenordev.github.io/horizon-flatpak/dev.playhorizon.Horizon.flatpakref
 ```
 
 ## Uninstall

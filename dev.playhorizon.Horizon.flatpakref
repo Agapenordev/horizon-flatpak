@@ -1,0 +1,6 @@
+[Flatpak Ref]
+Name=dev.playhorizon.Horizon
+Branch=master
+Url=https://agapenordev.github.io/horizon-flatpak/repo
+RuntimeRepo=https://flathub.org/repo/flathub.flatpakrepo
+Title=Horizon Launcher
