@@ -25,8 +25,8 @@ modules:
       - install -Dm644 THIRD_PARTY_NOTICES.md /app/share/licenses/horizon/THIRD_PARTY_NOTICES.md
     sources:
       - type: archive
-        url: https://github.com/horizon-rust/horizon/releases/download/launcher%400.2.64/horizon-launcher-linux-x86_64.tar.gz
-        sha256: 23ce231eb13bf4203ea99076b540b93596c7df67005e5429ecbbaa25245bee67
+        url: https://github.com/horizon-rust/horizon/releases/download/launcher%400.2.65/horizon-launcher-linux-x86_64.tar.gz
+        sha256: f915a98e74939e447075efb1f1b2f063560ae97bbad6269442616a26f3c5dcda
         strip-components: 0
         only-arches: [x86_64]
       - type: file
