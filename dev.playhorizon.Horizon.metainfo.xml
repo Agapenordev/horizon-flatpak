@@ -17,6 +17,7 @@
     <binary>horizon-launcher</binary>
   </provides>
   <releases>
+    <release version="0.2.88" date="2026-11-20"/>
     <release version="0.2.78" date="2026-11-18"/>
     <release version="0.2.69" date="2026-11-16"/>
     <release version="0.2.68" date="2026-11-15"/>
