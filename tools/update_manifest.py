@@ -15,9 +15,10 @@ ARCHIVE_NAME = "horizon-launcher-linux-x86_64.tar.gz"
 
 
 def request(url: str):
-    return urllib.request.urlopen(
-        urllib.request.Request(url, headers={"User-Agent": "horizon-flatpak-updater"})
-    )
+    headers = {"User-Agent": "horizon-flatpak-updater"}
+    if token := os.environ.get("GITHUB_TOKEN"):
+        headers["Authorization"] = f"Bearer {token}"
+    return urllib.request.urlopen(urllib.request.Request(url, headers=headers))
 
 
 def write_output(name: str, value: str) -> None:

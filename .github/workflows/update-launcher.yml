@@ -24,6 +24,8 @@ jobs:
 
       - name: Check for an upstream launcher release
         id: update
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: python3 tools/update_manifest.py
 
       - name: Install Flatpak build tools
